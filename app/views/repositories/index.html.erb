@@ -1,0 +1,35 @@
+<h1 class="page-title">Repositories</h1>
+
+<%= form_tag url_for(controller: 'repositories', action: 'index'), method: :get do %>
+  <%= text_field_tag :search_term, params[:search_term], placeholder: 'Enter search term' %>
+  <%= select_tag :sort_column, options_for_select(['stars', 'forks', 'help-wanted-issues', 'updated'], params[:sort_column]), include_blank: false %>
+  <%= select_tag :sort_direction, options_for_select([['Descending', 'desc'], ['Ascending', 'asc']], params[:sort_direction]), include_blank: false %>
+  <%= number_field_tag :page, params[:page] || 1, placeholder: 'Page' %>
+  <%= number_field_tag :per_page, params[:per_page] || 10, placeholder: 'Per Page' %>
+  <%= submit_tag 'Search' %>
+<% end %>
+
+<h2 class="search-results-title">Results</h2>
+
+<% if @repositories.present? %>
+  <table data-controller="repositories" class="repositories-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Stars</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @repositories.each do |repo| %>
+        <tr>
+          <td><%= repo['full_name'] %></td>
+          <td><%= repo['description'] %></td>
+          <td><%= repo['stargazers_count'] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p class="no-repositories-message">No repositories found.</p>
+<% end %>
